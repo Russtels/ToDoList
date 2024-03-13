@@ -1,0 +1,57 @@
+<todolist>
+    <div class="container mx-auto px-10 py-10 sm:px-20 lg:px-40 py-15">
+        <h1 class="text-3xl font-bold mb-4 text-center">To Do List</h1>
+        <form id="taskForm" class="flex items-center mb-8">
+            <input type="text" id="taskInput" placeholder="Escribe tu tarea aqui..." class="border rounded px-2 py-1 mr-2 flex-grow">
+            <button type="submit" class="inline-flex items-center px-4 py-2 bg-indigo-500 hover:bg-indigo-600 text-white text-sm font-medium rounded-md">Agregar Tarea</button>
+        </form>
+        <ul id="taskList" class="space-y-2">
+            
+        </ul>
+        
+    </div>
+    <script>
+        const taskList = document.getElementById('taskList'); // Movemos la declaración de taskList fuera de la función 'DOMContentLoaded'
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const taskForm = document.getElementById('taskForm');
+            const taskInput = document.querySelector<HTMLInputElement>('#taskInput'); // Utilizamos querySelector con el tipo HTMLInputElement
+
+            if (taskForm && taskInput) {
+                taskForm.addEventListener('submit', function (event: Event) {
+                    event.preventDefault();
+
+                    const taskValue = (taskInput as HTMLInputElement).value.trim(); // No es necesario hacer una conversión de tipo explícita
+
+                    if (taskValue !== '') {
+                        const newTask = document.createElement('li');
+                        newTask.textContent = taskValue;
+                        newTask.classList.add('relative', 'flex', 'items-center', 'justify-between', 'bg-gray-100', 'py-2', 'px-4', 'rounded-md', 'cursor-pointer'); // Add cursor pointer to new task
+                        const removeButton = document.createElement('button');
+                        removeButton.textContent = 'X';
+                        removeButton.classList.add('ml-2', 'px-1.5','rounded-md' , 'text-red-600', 'font-extrabold', 'hover:bg-black', 'hover:text-white');
+                        removeButton.onclick = removeTask;
+                        newTask.appendChild(removeButton);
+                        if (taskList) {
+                            taskList.appendChild(newTask);
+                        }
+
+                        // Toggle task completion
+                        newTask.addEventListener('click', function() {
+                            newTask.classList.toggle('line-through');
+                        });
+
+                        taskInput.value = '';
+                    }
+                });
+            }
+
+            function removeTask(event: MouseEvent) {
+                const taskToRemove = (event.target as HTMLElement)?.parentElement;
+                if (taskToRemove && taskList) {
+                    taskList.removeChild(taskToRemove);
+                }
+            }
+        });
+    </script>
+</todolist>
